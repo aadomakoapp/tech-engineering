@@ -1,0 +1,413 @@
+#include <iostream>
+#include <cmath>
+#include <string>
+
+using namespace std;
+//Declaring of functions for input  conversion.
+double resistanceunitcoversion(double, string);
+double capacitanceunitcoversion(double, string);
+double frequencyunitcoversion(double, string);
+
+
+int main() {
+	const double pi = acos(-1);	//Making pi a symbolic constant.
+	int option, finaloption;	//Decalaration of options.
+	do {		//Repitition of the program to display a different whole set of output.
+		
+				//Menu display.
+		do
+		{
+			//Prompting user to enter option in main-menu.
+			cout << "Welcome to the passive filter analysis software!" << endl;
+			cout << "Enter 1 for low pass filter" << endl;
+			cout << "Enter 2 for high pass filter" << endl;
+			cout << "Enter 3 for band-pass filter" << endl;
+			cin >> option;
+			
+			// Prompting the user to enter a valid option. 
+			if (option != 1 && option != 2 && option != 3) {			
+				cout << "Error in selection" << endl;				
+				cout << "Enter either 1, 2 or 3 only to continue" << endl;
+			}
+		} while (option != 1 && option != 2 && option != 3);	// Lock user in menu and ensure a valid option input.
+
+
+		switch (option) {
+		case 1:	//Low pass filter option.
+		{		
+			//Declaration of variables.
+			double cut_frequency, frequency, r, c, x, z, g, linegain, pshift;
+			string unit;
+			
+			cout << "Low pass filter selected" << endl;
+			
+			//Prompt the user for resistance with unit.
+			do {	
+				cout << "Enter the resistor's value for the filter with unit" << endl;
+				cin >> r >> unit;
+				r= resistanceunitcoversion(r,unit);	// Calling resistnace conversion function.
+				
+				//Pompting the user for a valid resistance value and unit.
+				if (r <= 0) {
+					cout << "Resistance takes only natural numbers" << endl;
+				}
+			
+				if (unit != "kiloohm" && unit != "ohm" && unit != "megaohm" &&
+					unit != "gigaohm" && unit != "centiohm" && unit != "milliohm" &&
+					unit != "microohm" && unit != "nanoohm" && unit != "picoohm") {
+					cout << "Enter appropriate unit for resistor" << endl;
+				}
+			} while (r <= 0 || (unit != "kiloohm" && unit != "ohm" && unit != "megaohm" &&
+				unit != "gigaohm" && unit != "centiohm" && unit != "milliohm" &&
+				unit != "microohm" && unit != "nanoohm" && unit != "picoohm"));		//Lock user and ensure a valid input for r.
+			
+			do {
+				cout << "Enter the capacitor's value for the filter with unit" << endl;
+				cin >> c >> unit;
+				c = capacitanceunitcoversion(c, unit);	//Calling capacitance conversion function.
+
+				//Pompting the user for a valid capacitance value and value
+				if (c <= 0) {
+					cout << "Capacitance takes only natural numbers" << endl;
+				}
+				if (unit != "kiloF" && unit != "F" && unit != "megaF" &&
+					unit != "gigaF" && unit != "centiF" && unit != "milliF" &&
+					unit != "microF" && unit != "nanoF" && unit != "picoF") {
+					cout << "Enter appropriate unit for capacitor" << endl;
+				}
+			} while (c <= 0|| (unit != "kiloF" && unit != "F" && unit != "megaF" &&
+				unit != "gigaF" && unit != "centiF" && unit != "milliF" &&
+				unit != "microF" && unit != "nanoF" && unit != "picoF"));	//Lock user and ensure a valid input for c.
+			
+			cut_frequency = 1 / (2 * pi * r * c);	//Computing cutoff frequency for low pass filter.
+			
+			cout << "The cutoff frequency for the filter is: " << cut_frequency << " Hz" << endl;	//Displaying cutoff frequency for low pass filter.
+			
+			//Prompt the user for frequency of low pass filter.
+			do {	
+				cout << "Enter the frequency value with unit" << endl;
+				cin >> frequency >> unit;
+				frequency= frequencyunitcoversion(frequency,unit);	//Calling frequency conversion function.
+
+				//Prompt user for valid frequency values and unit
+				if (frequency <= 0) {
+					cout << "Frequency takes only natural numbers" << endl;
+				}
+				if (unit != "kiloHz" && unit != "Hz" && unit != "megaHz" &&
+					unit != "gigaHz" && unit != "centiHz" && unit != "milliHz" &&
+					unit != "microHz" && unit != "nanoHz" && unit != "picoHz") {
+					cout << "Enter appropriate unit for frequency" << endl;
+				}
+			 } while (frequency <= 0||(unit != "kiloHz" && unit != "Hz" && unit != "megaHz" &&
+				 unit != "gigaHz" && unit != "centiHz" && unit != "milliHz" &&
+				 unit != "microHz" && unit != "nanoHz" && unit != "picoHz"));	//Lock user and ensure a valid frequency value.
+			
+			//Computing various required outputs.
+			x = 1 / (2 * pi * frequency * c);
+			z = sqrt((r * r) + (x * x));
+			g = 20 * log10(x / z);
+			linegain = pow(10, (g / 20));
+			pshift = -atan(2 * pi * frequency * r * c) * (180 / pi);
+			
+			//Displaying phaseshift, gain and linear gain.
+			cout << "The phase shift is: " << pshift << " degrees" << endl;
+			cout << "Gain of filter is: " << g << " dB" << endl;
+			cout << "Linear gain of filter is: " << linegain << endl;
+			break;
+		}
+
+		case 2:	//High pass filter option
+		{	//Declaration of variables.
+			double cut_frequency, frequency, r, c, x, z, g, linegain, pshift;	
+			string unit;
+			
+			cout << "High pass filter selected" << endl;
+			
+			//Prompt the user for resistance with unit.
+			do {
+				cout << "Enter the resistor's value for the filter with unit" << endl;
+				cin >> r >> unit;
+				r = resistanceunitcoversion(r, unit);	// Calling resistnace conversion function.
+
+				//Pompting the user for a valid resistance value.
+				if (r <= 0) {
+					cout << "Resistance takes only natural numbers" << endl;
+				}
+				if (unit != "kiloohm" && unit != "ohm" && unit != "megaohm" &&
+					unit != "gigaohm" && unit != "centiohm" && unit != "milliohm" &&
+					unit != "microohm" && unit != "nanoohm" && unit != "picoohm") {
+					cout << "Enter appropriate unit for resistor" << endl;
+				}
+			} while (r <= 0|| (unit != "kiloohm" && unit != "ohm" && unit != "megaohm" &&
+				unit != "gigaohm" && unit != "centiohm" && unit != "milliohm" &&
+				unit != "microohm" && unit != "nanoohm" && unit != "picoohm"));		//Lock user and ensure a valid input for r.
+
+			do {
+				cout << "Enter the capacitor's value for the filter with unit" << endl;
+				cin >> c >> unit;
+				c = capacitanceunitcoversion(c, unit);	//Calling capacitance conversion function.
+
+				//Pompting the user for a valid capacitance value.
+				if (c <= 0) {
+					cout << "Capacitance takes only natural numbers" << endl;
+				}
+				if (unit != "kiloF" && unit != "F" && unit != "megaF" &&
+					unit != "gigaF" && unit != "centiF" && unit != "milliF" &&
+					unit != "microF" && unit != "nanoF" && unit != "picoF") {
+					cout << "Enter appropriate unit for capacitor" << endl;
+				}
+			} while (c <= 0 || (unit != "kiloF" && unit != "F" && unit != "megaF" &&
+				unit != "gigaF" && unit != "centiF" && unit != "milliF" &&
+				unit != "microF" && unit != "nanoF" && unit != "picoF"));	//Lock user and ensure a valid input for c.
+			
+			cut_frequency = (1 / (2 * pi * r * c));	//Computing the cutoff frequency.
+			
+			cout << "The cutoff frequency for the filter is: " << cut_frequency << " Hz"<<endl;	//Displaying the cutoff frequency.
+			
+			//Prompt the user for frequency of low pass filter.
+			do {
+				cout << "Enter the frequency value with unit" << endl;
+				cin >> frequency >> unit;
+				frequency= frequencyunitcoversion(frequency,unit);	//Calling frequency conversion function.
+				
+				//Prompt user for valid frequency values.
+				if (frequency <= 0) {
+					cout << "Frequency takes only natural numbers" << endl;
+				}
+				if (unit != "kiloHz" && unit != "Hz" && unit != "megaHz" &&
+					unit != "gigaHz" && unit != "centiHz" && unit != "milliHz" &&
+					unit != "microHz" && unit != "nanoHz" && unit != "picoHz") {
+					cout << "Enter appropriate unit for frequency" << endl;
+				}
+			} while (frequency <= 0|| (unit != "kiloHz" && unit != "Hz" && unit != "megaHz" &&
+				unit != "gigaHz" && unit != "centiHz" && unit != "milliHz" &&
+				unit != "microHz" && unit != "nanoHz" && unit != "picoHz"));	//Lock user and ensure a valid frequency value.
+			
+			//Computing various required outputs.
+			x = 1 / (2 * pi * frequency * c);
+			z = sqrt((r * r) + (x * x));
+			g = 20 * log10(r / z);
+			linegain = pow(10, (g / 20));
+			pshift = atan(1 / (2 * pi * frequency * r * c)) * (180 / pi);
+			
+			//Displaying phaseshift, gain and linear gain.
+			cout << "The phaseshift is: " << pshift << " degrees" << endl;
+			cout << "Gain of filter is: " << g <<" dB"<< endl;
+			cout << "Linear gain of filter is: " << linegain << endl;
+			
+			break;
+		}
+
+		case 3:	//Band-pass filter option.
+		{	//Declaration of variables.
+			double r1, c1, r2, c2, fh, fl, fc, band, phase;	
+			string unit;
+			cout << "Band-pass filter selected" << endl;
+			
+			//Prompt the user for r1 value of high pass element.
+			do {
+				cout << "Enter resistor value for high pass element with unit" << endl;
+				cin >> r1 >> unit;
+				r1 = resistanceunitcoversion(r1, unit);	//Calling Reistance conversion function.
+
+				//Prompt user for valid r1 value of high pass elements.
+				if (r1 <= 0) {
+					cout << "Resistance takes only natural numbers" << endl;
+				}
+				if (unit != "kiloohm" && unit != "ohm" && unit != "megaohm" &&
+					unit != "gigaohm" && unit != "centiohm" && unit != "milliohm" &&
+					unit != "microohm" && unit != "nanoohm" && unit != "picoohm") {
+					cout << "Enter appropriate unit for resistor" << endl;
+				}
+			} while (r1 <= 0 ||( unit != "kiloohm" && unit != "ohm" && unit != "megaohm" &&
+				unit != "gigaohm" && unit != "centiohm" && unit != "milliohm" &&
+				unit != "microohm" && unit != "nanoohm" && unit != "picoohm"));		//Lock user and ensure a valid input for r1.
+				
+			//Prompt the user for r1 value of high pass element.
+			do{
+				cout << "Enter capacitor value for high pass element with unit" << endl;
+				cin >> c1 >> unit;
+				c1= capacitanceunitcoversion(c1,unit);	  //Calling Capacitance conversion function.
+				
+				//Prompt user for valid r and c values of high pass elements.
+				
+				if (c1 <= 0) {
+					cout << "Capacitance takes only natural numbers" << endl;
+				}
+				if (unit != "kiloF" && unit != "F" && unit != "megaF" &&
+					unit != "gigaF" && unit != "centiF" && unit != "milliF" &&
+					unit != "microF" && unit != "nanoF" && unit != "picoF") {
+					cout << "Enter appropriate unit for capacitor" << endl;
+				}
+			} while (c1 <= 0||(unit != "kiloF" && unit != "F" && unit != "megaF" &&
+				unit != "gigaF" && unit != "centiF" && unit != "milliF" &&
+				unit != "microF" && unit != "nanoF" && unit != "picoF"));	//Lock the user and ensure valid input for c1.
+			
+			fl = (1 / (2 * pi * r1 * c1));	//Compute the cutoff frequency for high pass element.
+			
+			//Prompt the user for r2 value of low pass element.
+			do {
+				cout << "Enter resistor value for low pass element with unit" << endl;
+				cin >> r2 >> unit;
+				r2 = resistanceunitcoversion(r2, unit);	//Calling Reistance conversion function.
+
+				//Prompt user for valid r2 value and unit of low pass elements.
+				if (r2 <= 0) {
+					cout << "Resistance takes only natural numbers" << endl;
+				}
+				if (unit != "kiloohm" && unit != "ohm" && unit != "megaohm" &&
+					unit != "gigaohm" && unit != "centiohm" && unit != "milliohm" &&
+					unit != "microohm" && unit != "nanoohm" && unit != "picoohm") {
+					cout << "Enter appropriate unit for resistor" << endl;
+				}
+			} while (r2 <= 0||(unit != "kiloohm" && unit != "ohm" && unit != "megaohm" &&
+				unit != "gigaohm" && unit != "centiohm" && unit != "milliohm" &&
+				unit != "microohm" && unit != "nanoohm" && unit != "picoohm"));	//Lock user and ensure a valid input for r2.
+
+			//Prompt the user for c2 value of low pass element.
+			do {
+				cout << "Enter capacitor value for low pass element with unit" << endl;
+				cin >> c2 >> unit;
+				c2 = capacitanceunitcoversion(c2, unit);	  //Calling Capacitance conversion function.
+
+				//Prompt user for valid c2 values of low pass element.
+
+				if (c2 <= 0) {
+					cout << "Capacitance takes only natural numbers" << endl;
+				}
+				if (unit != "kiloF" && unit != "F" && unit != "megaF" &&
+					unit != "gigaF" && unit != "centiF" && unit != "milliF" &&
+					unit != "microF" && unit != "nanoF" && unit != "picoF") {
+					cout << "Enter appropriate unit for capacitor" << endl;
+				}
+			} while (c2 <= 0||(unit != "kiloF" && unit != "F" && unit != "megaF" &&
+				unit != "gigaF" && unit != "centiF" && unit != "milliF" &&
+				unit != "microF" && unit != "nanoF" && unit != "picoF"));	//Lock the user and ensure valid input for c1.
+			
+			fh = (1 / (2 * pi * r2 * c2));	//Compute the cutoff frequency for low pass elements.
+			
+			//Computing various requuired outputs.
+			fc = sqrt(fh * fl);
+			band = fh - fl;
+			phase = (atan(1 / (2 * pi * fc * r1 * c1)) - atan(2 * pi * fc * r2 * c2)) * (180 / pi);
+			
+			//Displaying the outputs of the bandpass filter.
+			cout << "The centre(resonant) frequency is: " << fc << " Hz" << endl;
+			cout << "The bandwidth is: " << band << " Hz" << endl;
+			cout << "The phase shift at the centre freqeuncy: "<<fc<<" is: " << phase << " degrees" << endl;
+			break;
+		}
+
+		}
+		cout << endl;	//Create an empty line for display formatting.
+		
+		//Options to exit application or return to main menu again.
+		cout << "Press 1 to return to the main menu." << endl;
+		cout << "Press any other number to exit the program." << endl;
+		cin >> finaloption;
+	}while (finaloption==1);
+		
+	
+	
+	return 0;
+	}
+
+	
+	//Resistance conversion function when unit is added to input. 
+double resistanceunitcoversion(double r, string unit) {
+	
+		if (unit == "ohm") {
+			r = r;
+		}
+		else if (unit == "kiloohm") {
+			r *= pow(10, 3);
+		}
+		else if (unit == "megaohm") {
+			r *= pow(10, 6);
+		}
+		else if (unit == "gigaohm") {
+			r *= pow(10, 9);
+		}
+		else if (unit == "centiohm") {
+			r *= pow(10, -2);
+		}
+		else if (unit == "milliohm") {
+			r *= pow(10, -3);
+		}
+		else if (unit == "microohm") {
+			r *= pow(10, -6);
+		}
+		else if (unit == "nanoohm") {
+			r *= pow(10, -9);
+		}
+		else if (unit == "picoohm") {
+			r *= pow(10, -12);
+		}
+		return r;
+	}
+
+	//Resistance conversion function when unit is added to input. 
+double capacitanceunitcoversion(double c,string unit) {
+
+	if (unit == "F") {
+		c = c;
+	}
+	else if (unit == "kiloF") {
+		c *=pow(10,3);
+	}
+	else if (unit == "megaF") {
+		c *=pow(10,6);
+	}
+	else if (unit == "gigaF") {
+		c *=pow(10,9);
+	}
+	else if (unit == "centiF") {
+		c *=pow(10,-2);
+	}
+	else if (unit == "milliF") {
+		c *=pow(10,-3);
+	}
+	else if (unit == "microF") {
+		c *=pow(10,-6);
+	}
+	else if (unit == "nanoF") {
+		c *=pow(10,-9);
+	}
+	else if (unit == "picoF") {
+		c *=pow(10,-12);
+	}
+	return c;
+}
+
+//Frequency conversion function when unit is added to input. 
+double frequencyunitcoversion(double f,string unit) {
+
+	if (unit == "Hz") {
+		f = f;
+	}
+	else if (unit == "kiloHz") {
+		f *=pow(10,3);
+	}
+	else if (unit == "megaHz") {
+		f *=pow(10,6);
+	}
+	else if (unit == "gigaHz") {
+		f *=pow(10,9);
+	}
+	else if (unit == "centiHz") {
+		f *=pow(10,-2);
+	}
+	else if (unit == "milliHz") {
+		f *=pow(10,-3);
+	}
+	else if (unit == "microHz") {
+		f *=pow(10,-6);
+	}
+	else if (unit == "nanoHz") {
+		f *=pow(10,-9);
+	}
+	else if (unit == "picoHz") {
+		f *=pow(10,-12);
+	}
+	return f;
+}
