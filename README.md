@@ -17,7 +17,7 @@
 - The output generated is then used to detect if the car needs servicing and to which extent it should be serviced.
 
 3.  TRAFFIC LIGHT INTERSECTION/ CAR JUNCTIOON SIMULATION.
-- This algorothm is solely based on OOP.
+- This algorithm is solely based on OOP.
 - The algorithm genearetes a simulation of a 4-way junction.
 - It checks and signals green and red respectively to signal "move" or "stop".
 - It updates the waitijg times based on the traffic situation on a particlar highway.
